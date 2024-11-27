@@ -5,7 +5,7 @@ export const metadata: Metadata = {
 	description: 'Example dashboard app built using the components.',
 };
 
-export default function DashboardPage() {
+export default function RootPage() {
 	return (
 		<main className='min-h-[100vh] min-w-[100vw] flex items-center justify-center'>
 			<div className='flex flex-col items-center justify-center gap-4'>

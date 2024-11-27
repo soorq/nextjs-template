@@ -22,6 +22,10 @@
 		"format": "prettier --write .",
 		"test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build",
 		"prepare": "husky install",
+		"e2e": "start-server-and-test dev http://localhost:3000 \"cypress open --e2e\"",
+		"e2e:headless": "start-server-and-test dev http://localhost:3000 \"cypress run --e2e\"",
+		"component": "cypress open --component",
+		"component:headless": "cypress run --component",
 		"deps:check": "npx depcruise --config .dependency-cruiser.cjs src",
 		"deps:graphs": "npx depcruise src --include-only ^src --output-type dot | dot -T svg > ./docs/dependency/graph.svg"
 	},
@@ -44,6 +48,7 @@
 		"autoprefixer": "^10.4.20",
 		"critters": "^0.0.25",
 		"cssnano": "^7.0.6",
+		"cypress": "^13.16.0",
 		"dependency-cruiser": "^16.6.0",
 		"eslint": "^8",
 		"eslint-config-next": "14.2.5",
