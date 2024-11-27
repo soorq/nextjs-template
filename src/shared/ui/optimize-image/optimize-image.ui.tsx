@@ -1,4 +1,5 @@
 'use client';
+import s from './optimize-image.module.css';
 import { useState } from 'react';
 import Image from 'next/image';
 
@@ -14,7 +15,7 @@ export function OptimizedImage({ src, alt, width, height, priority = false }: Op
 	const [isLoading, setLoading] = useState(true);
 
 	return (
-		<div className='aspect-w-16 aspect-h-9 relative overflow-hidden rounded-lg'>
+		<div className={s.wrapper}>
 			<Image
 				src={src}
 				alt={alt}
@@ -22,10 +23,7 @@ export function OptimizedImage({ src, alt, width, height, priority = false }: Op
 				height={height}
 				priority={priority}
 				quality={90}
-				className={`
-          duration-700 ease-in-out
-          ${isLoading ? 'scale-110 blur-2xl grayscale' : 'scale-100 blur-0 grayscale-0'}
-        `}
+				className={`${s.image} ${isLoading ? s.image__loading : ''}`}
 				onLoadingComplete={() => setLoading(false)}
 				sizes='(max-width: 640px) 100vw,
                (max-width: 1024px) 50vw,

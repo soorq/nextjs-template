@@ -30,6 +30,8 @@
 		"deps:graphs": "npx depcruise src --include-only ^src --output-type dot | dot -T svg > ./docs/dependency/graph.svg"
 	},
 	"dependencies": {
+		"class-variance-authority": "^0.7.1",
+		"clsx": "^2.1.1",
 		"date-fns": "^3.6.0",
 		"next": "14.2.5",
 		"next-themes": "^0.3.0",

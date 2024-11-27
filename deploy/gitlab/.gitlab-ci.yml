@@ -1,0 +1,87 @@
+variables:
+    DOCKER_BUILDKIT: 1
+    DOCKER_TLS_CERTDIR: '/certs'
+    IMAGE_TEST: $CI_REGISTRY_IMAGE/test:latest
+    IMAGE_DEPLOY: $CI_REGISTRY_IMAGE/deploy:latest
+
+stages:
+    - build
+    - prebuild
+    - linter
+    - deploy
+    - info
+
+.base:
+    image: docker:latest
+    services:
+        - docker:24.0.5-dind
+    script:
+        - echo "Starting"
+    before_script:
+        - docker --version
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+
+build:builder:
+    only:
+        changes:
+            - 'public/*'
+            - 'src/*'
+    extends: .base
+    stage: build
+    script:
+        - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from "$IMAGE_TEST" --target builder -t "$IMAGE_TEST" .
+        - docker push "$IMAGE_TEST"
+
+build:deploy:
+    extends: .base
+    stage: prebuild
+    needs: ['build:builder']
+    script:
+        - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from "$IMAGE_DEPLOY" --cache-from "$IMAGE_TEST" -t "$IMAGE_DEPLOY" .
+        - docker push "$IMAGE_DEPLOY"
+
+test:eslint:
+    extends: .base
+    stage: linter
+    needs: ['build:deploy']
+    script:
+        - docker run "$IMAGE_TEST" npm run check-lint
+
+test:prettier:
+    extends: .base
+    stage: linter
+    needs: ['build:deploy']
+    script:
+        - docker run "$IMAGE_TEST" npm run check-format
+
+test:typescript:
+    extends: .base
+    stage: linter
+    needs: ['build:deploy']
+    script:
+        - docker run "$IMAGE_TEST" npm run check-types
+
+deploy:
+    extends: .base
+    stage: deploy
+    needs: ['build:deploy', 'test:prettier', 'test:eslint', 'test:typescript']
+    script:
+        - mkdir -p ~/.ssh
+        - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        - chmod 600 ~/.ssh/id_rsa
+        - ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+        - ssh -i ~/.ssh/id_rsa $SSH_USER@$SSH_HOST 'sudo /bin/bash /root/inquadra/deploy-client.sh'
+    only:
+        - main
+
+notify:telegram:
+    needs: ['deploy']
+    stage: info
+    script:
+        - >
+            curl -s -X POST \
+            https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \
+            -d chat_id=$TELEGRAM_CHAT_ID \
+            -d text="Pipeline finished on branch $CI_COMMIT_REF_NAME. Status: $CI_JOB_STATUS"
+    only:
+        - main
