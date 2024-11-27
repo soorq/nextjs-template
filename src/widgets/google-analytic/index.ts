@@ -1,1 +1,1 @@
-export * from "./google-analytic.ui";
+export * from './google-analytic.ui';

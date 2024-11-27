@@ -1,5 +1,6 @@
-import { ThemeProvider } from "../theme";
+import type { PropsWithChildren } from 'react';
+import { ThemeProvider } from '../theme';
 
-export function RootProvider({ children }: Readonly<React.PropsWithChildren>) {
-    return <ThemeProvider>{children}</ThemeProvider>;
+export function RootProvider({ children }: Readonly<PropsWithChildren>) {
+	return <ThemeProvider>{children}</ThemeProvider>;
 }

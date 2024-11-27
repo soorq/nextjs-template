@@ -1,15 +1,18 @@
-import { ThemeProvider as NextTheme } from "next-themes";
+'use client';
 
-export function ThemeProvider({ children }: Readonly<React.PropsWithChildren>) {
-    return (
-        <NextTheme
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            themes={["orange", "light", "dark"]}
-            disableTransitionOnChange
-        >
-            {children}
-        </NextTheme>
-    );
+import { ThemeProvider as NextTheme } from 'next-themes';
+import type { PropsWithChildren } from 'react';
+
+export function ThemeProvider({ children }: Readonly<PropsWithChildren>) {
+	return (
+		<NextTheme
+			attribute='class'
+			defaultTheme='system'
+			enableSystem
+			themes={['orange', 'light', 'dark']}
+			disableTransitionOnChange
+		>
+			{children}
+		</NextTheme>
+	);
 }
