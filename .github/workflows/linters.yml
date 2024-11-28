@@ -14,11 +14,14 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v2
 
+            - name: Docker login to GitHub Container Registry
+              run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
             - name: Run ESLint
-              run: docker run ${{ secrets.CI_REGISTRY_IMAGE }}/test:latest npm run check-lint
+              run: docker run ghcr.io/${{ github.repository_owner }}/test:latest npm run check-lint
 
             - name: Run Prettier
-              run: docker run ${{ secrets.CI_REGISTRY_IMAGE }}/test:latest npm run check-format
+              run: docker run ghcr.io/${{ github.repository_owner }}/test:latest npm run check-format
 
             - name: Run TypeScript checks
-              run: docker run ${{ secrets.CI_REGISTRY_IMAGE }}/test:latest npm run check-types
+              run: docker run ghcr.io/${{ github.repository_owner }}/test:latest npm run check-types
