@@ -1,0 +1,24 @@
+name: Lint Code
+
+on:
+    workflow_run:
+        workflows: ['Build Docker Image']
+        types:
+            - completed
+
+jobs:
+    linting:
+        runs-on: ubuntu-latest
+        needs: build-builder
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Run ESLint
+              run: docker run ${{ secrets.CI_REGISTRY_IMAGE }}/test:latest npm run check-lint
+
+            - name: Run Prettier
+              run: docker run ${{ secrets.CI_REGISTRY_IMAGE }}/test:latest npm run check-format
+
+            - name: Run TypeScript checks
+              run: docker run ${{ secrets.CI_REGISTRY_IMAGE }}/test:latest npm run check-types

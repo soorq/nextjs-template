@@ -12,7 +12,7 @@ const sans = FontSans({
 	variable: '--font-sans',
 });
 
-const $app = process.env['NEXT_PUBLIC_APP_URL'] ?? '';
+const $app = process.env.NEXT_PUBLIC_APP_URL;
 
 export const metadata: Metadata = {
 	metadataBase: new URL($app),

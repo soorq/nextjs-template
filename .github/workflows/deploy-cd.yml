@@ -1,0 +1,19 @@
+name: Deploy Application
+
+on:
+    workflow_run:
+        workflows: ['Lint Code']
+        types:
+            - completed
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        needs: linting
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Deploy application
+              run: |
+                  echo "Deploying application with SSH keys..."

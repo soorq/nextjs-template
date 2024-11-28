@@ -3,3 +3,4 @@
 /next.config.mjs
 /cypress.config.ts
 /cypress
+/src/shared/types

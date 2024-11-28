@@ -66,11 +66,7 @@ deploy:
     stage: deploy
     needs: ['build:deploy', 'test:prettier', 'test:eslint', 'test:typescript']
     script:
-        - mkdir -p ~/.ssh
-        - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-        - chmod 600 ~/.ssh/id_rsa
-        - ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
-        - ssh -i ~/.ssh/id_rsa $SSH_USER@$SSH_HOST 'sudo /bin/bash /root/inquadra/deploy-client.sh'
+        - echo Try u ssh keys to deploy
     only:
         - main
 
