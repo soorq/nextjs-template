@@ -25,5 +25,5 @@ jobs:
             # Шаг 4: Сборка и пуш базового образа для builder
             - name: Build and push base image for builder
               run: |
-                  docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from ghcr.io/${{ github.repository_owner }}/test:latest --target builder -t ghcr.io/${{ github.repository_owner }}/test:latest .
+                  docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from ghcr.io/${{ github.repository_owner }}/test:latest --target builder -t ghcr.io/${{ github.repository_owner }}/test:latest --build-arg NEXT_PUBLIC_APP_URL=${}.
                   docker push ghcr.io/${{ github.repository_owner }}/test:latest
